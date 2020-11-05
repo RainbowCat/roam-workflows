@@ -1,5 +1,6 @@
 import sys
 import datetime
+import func
 
 
 def suffix(d):
