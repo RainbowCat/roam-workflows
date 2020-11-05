@@ -71,6 +71,7 @@ def fa20_calendar():
     # print(delta).day
     # print(startdate - enddate)
 
+    weeknum = 0
     for i in range(117):
         t = startdate + datetime.timedelta(days=i)
 
@@ -85,10 +86,10 @@ def fa20_calendar():
         fmt = "[[%B {S}, %Y]]"
         d2 = t.strftime(fmt).replace("{S}", str(t.day) + suffix(t.day))
 
-        weeknum = 0
         if t.weekday() == 0:
             print(f"[[Fa20 Week {weeknum}]]", "{{[[kanban]]}}")
             weeknum += 1
+
         print("	", d1)
         print(
             "		",
