@@ -7,7 +7,6 @@ def suffix(d):
 
 
 def custom_strftime(fmt, t):
-    print(fmt)
     weekday = dayNameFromWeekday(t.weekday())
     return (
         t.strftime(fmt)
@@ -43,24 +42,17 @@ def calculate_retro_dates():
     return retros
 
 
-def list_dates(num, shift=0, with_weekdays=True):
+def list_dates_from_today(num, shift=0, with_weekdays=True):
     today = datetime.date.today() + datetime.timedelta(days=shift)
     dates = []
     for i in range(num):
         t = today + datetime.timedelta(days=i)
         if with_weekdays:
             fmt = "{W}:: [[%B {S}, %Y]]"
-            weekday = dayNameFromWeekday(t.weekday())
-            d = (
-                t.strftime(fmt)
-                .replace("{S}", str(t.day) + suffix(t.day))
-                .replace("{W}", weekday)
-            )
-            dates.append(d)
         else:
             fmt = "[[%B {S}, %Y]]"
-            d = t.strftime(fmt).replace("{S}", str(t.day) + suffix(t.day))
-            dates.append(d)
+        d = custom_strftime(fmt, t)
+        dates.append(d)
     return dates
 
 
@@ -68,11 +60,9 @@ def fa20_calendar():
     startdate = datetime.date(2020, 8, 24)
     enddate = datetime.date(2020, 12, 18)
     delta = enddate - startdate
-    # print(delta).day
-    # print(startdate - enddate)
 
     weeknum = 0
-    for i in range(117):
+    for i in range(delta.days):
         t = startdate + datetime.timedelta(days=i)
 
         fmt = "{W}:: [[%B {S}, %Y]]"
@@ -99,17 +89,44 @@ def fa20_calendar():
         )
 
 
-def main():
-    num = int(sys.argv[1])
-    with_weekdays = True
-    if len(sys.argv) == 3:
-        with_weekdays = int(sys.argv[2]) != 0
-    for date in list_dates(num, with_weekdays):
-        print(date)
+def get_calendar():
+    startdate = datetime.date(2021, 8, 24)
+    enddate = datetime.date(2021, 12, 18)
+    delta = enddate - startdate
+
+    for i in range(delta.days):
+        t = startdate + datetime.timedelta(days=i)
+        weekday = t.weekday()
+        blanks = weekday * "    "
+
+        fmt = "[[%B {S}, %Y]]"
+        d = t.strftime(fmt).replace("{S}", str(t.day) + suffix(t.day))
+
+        # print(blanks + d + "\n" + "test")
+        # print(
+        #     blanks
+        #     + d
+        #     + "{{[[query]]: {or: #date #due}"
+        #     + d
+        #     + "{not:{or: #query #depreciated}} } }}"
+        # )
+
+
+def yearly_calendar(year):
+    startdate = datetime.date(year, 1, 1)
+    enddate = datetime.date(year, 12, 31)
+    delta = enddate - startdate
+
+    for i in range(delta.days):
+        fmt = "{W}: [[%B {S}, %Y]]"
+        t = startdate + datetime.timedelta(days=i)
+        d = custom_strftime(fmt, t)
+        print(d)
 
 
 if __name__ == "__main__":
     # main()
-    fa20_calendar()
+    # fa20_calendar()
+    yearly_calendar(int(sys.argv[1]))
     # for d in list_dates(10, -2, True):
     # 	print(d)
