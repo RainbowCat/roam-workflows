@@ -71,8 +71,8 @@ def yearly_calendar(year, with_weekdays):
         t = startdate + datetime.timedelta(days=i)
         if t.day == 1:
             print(f"[[{t.strftime('%B')}]]")
-            print(f"    [[Week {t.isocalendar()[1]}]]")
+            print(f"[[Week {t.isocalendar()[1]}]]")  # TODO add indents for Roam?
         elif t.weekday() == 1:
-            print(f"    [[Week {t.isocalendar()[1]}]]")
+            print(f"[[Week {t.isocalendar()[1]}]]")  # TODO add indents for Roam?
         d = custom_strftime(fmt, t)
-        print("     ", d)
+        print(d)  # TODO add indents for Roam?
