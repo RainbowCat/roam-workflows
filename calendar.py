@@ -2,9 +2,17 @@ import datetime
 from dates import *
 
 
-def fa20_calendar():
-    startdate = datetime.date(2020, 8, 24)
-    enddate = datetime.date(2020, 12, 18)
+def retro_dates():
+    today = datetime.date.today()
+    retros = [
+        custom_strftime("%B {S}, %Y", today - datetime.timedelta(weeks=i))
+        for i in [1, 4, 12]
+    ]
+    retros.append(custom_strftime("%B {S}, %Y", today - datetime.timedelta(days=365)))
+    return retros
+
+
+def academic_calendar(startdate, enddate, semester):
     delta = enddate - startdate
 
     weeknum = 0
@@ -29,42 +37,42 @@ def fa20_calendar():
         print("	", d1)
         print(
             "		",
-            "{{[[query]]: {and: [[t]] [[Berkeley]] [[Fa20]] {or: #date #due}",
+            "{{[[query]]: {and: [[t]] [[Berkeley]] "
+            + f"[[{semester}]]"
+            + " {or: #date #due}",
             d2,
             "{not:{or: #query #depreciated}} } }}",
         )
 
 
-def get_calendar():
-    startdate = datetime.date(2021, 8, 24)
-    enddate = datetime.date(2021, 12, 18)
+def fa20_calendar():
+    startdate = datetime.date(2020, 8, 24)
+    enddate = datetime.date(2020, 12, 18)
+    return academic_calendar(startdate, enddate)
+
+
+def get_calendar(startdate, enddate, with_weekdays):
+    fmt = "{W}: [[%B {S}, %Y]]" if with_weekdays else "[[%B {S}, %Y]]"
     delta = enddate - startdate
 
     for i in range(delta.days):
         t = startdate + datetime.timedelta(days=i)
-        weekday = t.weekday()
-        blanks = weekday * "    "
-
-        fmt = "[[%B {S}, %Y]]"
-        d = t.strftime(fmt).replace("{S}", str(t.day) + suffix(t.day))
-
-        # print(blanks + d + "\n" + "test")
-        # print(
-        #     blanks
-        #     + d
-        #     + "{{[[query]]: {or: #date #due}"
-        #     + d
-        #     + "{not:{or: #query #depreciated}} } }}"
-        # )
+        d = custom_strftime(fmt, t)
+        print(d)
 
 
-def yearly_calendar(year):
+def yearly_calendar(year, with_weekdays):
+    fmt = "{W}: [[%B {S}, %Y]]" if with_weekdays else "[[%B {S}, %Y]]"
     startdate = datetime.date(year, 1, 1)
     enddate = datetime.date(year, 12, 31)
     delta = enddate - startdate
 
     for i in range(delta.days):
-        fmt = "{W}: [[%B {S}, %Y]]"
         t = startdate + datetime.timedelta(days=i)
+        if t.day == 1:
+            print(f"[[{t.strftime('%B')}]]")
+            print(f"    [[Week {t.isocalendar()[1]}]]")
+        elif t.weekday() == 1:
+            print(f"    [[Week {t.isocalendar()[1]}]]")
         d = custom_strftime(fmt, t)
-        print(d)
+        print("     ", d)
