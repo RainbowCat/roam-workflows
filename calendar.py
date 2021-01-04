@@ -62,17 +62,19 @@ def get_calendar(startdate, enddate, with_weekdays):
 
 
 def yearly_calendar(year, with_weekdays):
-    fmt = "{W}: [[%B {S}, %Y]]" if with_weekdays else "[[%B {S}, %Y]]"
+    fmt = "{W}:: [[%B {S}, %Y]]" if with_weekdays else "[[%B {S}, %Y]]"
     startdate = datetime.date(year, 1, 1)
     enddate = datetime.date(year, 12, 31)
     delta = enddate - startdate
 
+    week_num = 1
     for i in range(delta.days):
         t = startdate + datetime.timedelta(days=i)
-        if t.day == 1:
+        if t.day == 1:  # print month
             print(f"[[{t.strftime('%B')}]]")
-            print(f"[[Week {t.isocalendar()[1]}]]")  # TODO add indents for Roam?
-        elif t.weekday() == 1:
-            print(f"[[Week {t.isocalendar()[1]}]]")  # TODO add indents for Roam?
-        d = custom_strftime(fmt, t)
+        if t.day == 1 or t.weekday() == 0:  # print week number
+            print(f"[[Week {week_num}]]")  # TODO add indents for Roam?
+        if t.weekday() == 6:
+            week_num += 1
+        d = custom_strftime(fmt, t)  # print date
         print(d)  # TODO add indents for Roam?

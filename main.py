@@ -6,4 +6,4 @@ from calendar import get_calendar, yearly_calendar
 # enddate = datetime.date(2020, 12, 18)
 # get_calendar(startdate, enddate, with_weekdays=True)
 
-yearly_calendar(year=2021, with_weekdays=False)
+yearly_calendar(year=2021, with_weekdays=True)
