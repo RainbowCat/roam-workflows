@@ -1,19 +1,12 @@
 import sys
 import datetime
 
-
 def suffix(d):
     return "th" if 11 <= d <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(d % 10, "th")
 
-
 def custom_strftime(fmt, t):
-    weekday = dayNameFromWeekday(t.weekday())
-    return (
-        t.strftime(fmt)
-        .replace("{S}", str(t.day) + suffix(t.day))
-        .replace("{W}", weekday)
-    )
-
+	weekday = dayNameFromWeekday(t.weekday())
+	return t.strftime(fmt).replace("{S}", str(t.day) + suffix(t.day)).replace("{W}", weekday)
 
 def dayNameFromWeekday(weekday):
     if weekday == 0:
@@ -30,7 +23,6 @@ def dayNameFromWeekday(weekday):
         return "Sat"
     if weekday == 6:
         return "Sun"
-
 
 def calculate_retro_dates():
     today = datetime.date.today()
